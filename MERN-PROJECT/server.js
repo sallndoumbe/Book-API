@@ -39,6 +39,33 @@ app.post('/api/books', (req, res) => {
 });
 
 
+app.patch('/api/books/:id', (req, res) => {
+  const bookId = parseInt(req.params.id);
+  const book = books.find(b => b.id === bookId);
+
+  if (book) {
+    if (req.body.title !== undefined) {
+      book.title = req.body.title;
+    }
+
+    res.json(book);
+  } else {
+    res.status(404).json({ message: 'Book not found' });
+  }
+});
+
+app.delete('/api/books/:id', (req, res) => {
+  const bookId = parseInt(req.params.id);
+  const bookIndex = books.findIndex(b => b.id === bookId);
+
+  if (bookIndex !== -1) {
+    const deletedBook = books.splice(bookIndex, 1);
+    res.json(deletedBook[0]);
+  } else {
+    res.status(404).json({ message: 'Book not found' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
