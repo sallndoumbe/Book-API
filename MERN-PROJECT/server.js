@@ -17,18 +17,29 @@ app.get('/', (req, res) => {
   res.send('Bienvenue sur Book API de MERN-PROJECT');
 });
 
-app.get('/api/books/:id', (req, res) => { 
-  const bookId = parseInt(req.params.id);
-  const book = books.find(b => b.id === bookId);
-  if (book) {
-    res.json(book);
-  } else {
-    res.status(404).json({ message: 'Book not found' });
+app.get('/api/books/:id', async (req, res) => {
+  try {
+    const bookId = req.params.id;
+    const book = await Book.findById(bookId);
+
+    if (book) {
+      res.json(book);
+    } else {
+      res.status(404).json({ message: 'Book not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 
-app.get('/api/books', (req, res) => {
-  res.json(books);
+app.get('/api/books',async (req, res) => {
+  try {
+    const books = await Book.find();
+    console.log(books);
+    res.json(books);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 
