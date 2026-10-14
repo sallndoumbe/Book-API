@@ -1,4 +1,6 @@
-const express = require("express");
+
+require('dotenv').config({ path: './config/.env' });
+const connectDB = require('./config/db');const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
@@ -66,6 +68,8 @@ app.delete('/api/books/:id', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
