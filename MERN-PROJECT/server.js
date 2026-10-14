@@ -1,4 +1,4 @@
-
+const Book = require('./models/Book');
 require('dotenv').config({ path: './config/.env' });
 const connectDB = require('./config/db');const express = require("express");
 const app = express();
@@ -32,14 +32,14 @@ app.get('/api/books', (req, res) => {
 });
 
 
-app.post('/api/books', (req, res) => {
-  const newBook = req.body;
-  newBook.id = books.length > 0 ? Math.max(...books.map(b => b.id)) + 1 : 1;
-  books.push(newBook);
-
-  res.status(201).json(newBook);
+app.post('/api/books', async (req, res) => {
+  try {
+    const newBook = await Book.create(req.body);
+    res.status(201).json(newBook);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 });
-
 
 app.patch('/api/books/:id', (req, res) => {
   const bookId = parseInt(req.params.id);
